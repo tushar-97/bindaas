@@ -1,0 +1,70 @@
+<!--<label>Username (Optional)</label>-->
+<!--		<span class="has-tip tip-left" data-width="210" title="username for connecting to Apache Drill"> <input type="text" id="drill_username" /></span>-->
+<!--		<label>Password (Optional)</label>-->
+<!--		<span class="has-tip tip-left" data-width="210" title="password for connecting to Apache Drill"><input type="password" id="drill_password" /></span>-->
+		<label>Path</label>
+		<span class="has-tip tip-left" data-width="210" title="Path to JSON"><input type="text" id="drill_url" /></span>
+
+		<script>
+			
+			$("#drill_username").keyup(function ()
+			{
+				updateProviderFieldDrill();
+			});
+			$("#drill_password").keyup(function ()
+			{
+				updateProviderFieldDrill();
+			});
+			
+			$("#drill_url").keyup(function ()
+			{
+				updateProviderFieldDrill();
+			});
+			
+			
+						
+			   
+		   function updateProviderFieldDrill()
+		   {
+		   	 var dataSourceJson = {};
+		   	 dataSourceJson.username = $("#drill_username").attr("value");
+		   	 dataSourceJson.password = $("#drill_password").attr("value");
+		   	 dataSourceJson.url = $("#drill_url").attr("value");
+		   	 $("#dataSource").attr("value" , JSON.stringify(dataSourceJson));
+		   	drillValidate();
+		   }    
+		   
+		   function reverseUpdateDataSourceViewDrill()
+		   {
+			   try{
+				   var dataSourceJson =  $("#dataSource").attr("value");
+				   dataSourceJson = jQuery.parseJSON( dataSourceJson ) ;
+				   $("#drill_username").attr("value", dataSourceJson.username);
+				   $("#drill_password").attr("value", dataSourceJson.password);
+				   $("#drill_url").attr("value", dataSourceJson.url);
+				   
+			   }catch(e){}
+			   
+		   }
+		   
+		   function drillValidate() {
+				
+				if ($("#DrillProvider").is(":visible")) {
+					ValidationObject.addConstraint("drill_url", $("#drill_url").attr("value") && $("#drill_url").attr("value") != "", function() {
+						alert("URL not specified");
+						$("#drill_url").focus();
+					});
+				} else {
+					ValidationObject.removeConstraint("drill_url");
+				}
+			}
+		   
+		   reverseUpdateDataSourceViewDrill();
+		   
+		   $("#DrillProvider").bind("onaftershow" , function(e){
+			   drillValidate(); 	
+			});
+			$("#DrillProvider").bind("onafterhide" , function(e){
+				drillValidate(); 	
+			});
+		</script>

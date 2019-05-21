@@ -23,5 +23,6 @@
         <module>generic-sql-datasource-provider</module>
         <module>http-datasource-provider</module>
         <module>aime/aime-bindaas-datasource-provider-2</module>
+        <module>bigquery-datasource-provider</module>
     </modules>
 </project>
