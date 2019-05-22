@@ -27,33 +27,17 @@
 				<configuration>
 					<artifactItems>
 						<artifactItem>
-							<groupId>org.apache.drill.exec</groupId>
-							<artifactId>drill-jdbc-all</artifactId>
-							<version>1.6.0</version>
-							<type>jar</type>
-							<overWrite>true</overWrite>
-							<outputDirectory>${project.basedir}/src/main/resources/META-INF/lib</outputDirectory>
-						</artifactItem>
-						<artifactItem>
-							<groupId>org.slf4j</groupId>
-							<artifactId>slf4j-log4j12</artifactId>
-							<version>1.7.25</version>
-							<type>jar</type>
-							<overWrite>true</overWrite>
-							<outputDirectory>${project.basedir}/src/main/resources/META-INF/lib</outputDirectory>
-						</artifactItem>
-						<artifactItem>
-							<groupId>org.slf4j</groupId>
-							<artifactId>slf4j-api</artifactId>
-							<version>1.7.25</version>
-							<type>jar</type>
-							<overWrite>true</overWrite>
-							<outputDirectory>${project.basedir}/src/main/resources/META-INF/lib</outputDirectory>
-						</artifactItem>
-						<artifactItem>
 							<groupId>com.google.cloud</groupId>
 							<artifactId>google-cloud-bigquery</artifactId>
 							<version>1.74.0</version>
+							<type>jar</type>
+							<overWrite>true</overWrite>
+							<outputDirectory>${project.basedir}/src/main/resources/META-INF/lib</outputDirectory>
+						</artifactItem>
+						<artifactItem>
+							<groupId>com.google.auth</groupId>
+							<artifactId>google-auth-library-oauth2-http</artifactId>
+							<version>0.15.0</version>
 							<type>jar</type>
 							<overWrite>true</overWrite>
 							<outputDirectory>${project.basedir}/src/main/resources/META-INF/lib</outputDirectory>
@@ -76,24 +60,14 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.drill.exec</groupId>
-			<artifactId>drill-jdbc-all</artifactId>
-			<version>1.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.25</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.25</version>
-		</dependency>
-		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-bigquery</artifactId>
 			<version>1.74.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.auth</groupId>
+			<artifactId>google-auth-library-oauth2-http</artifactId>
+			<version>0.15.0</version>
 		</dependency>
 	</dependencies>
 </project>

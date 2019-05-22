@@ -123,14 +123,13 @@ public class BigQueryProvider implements IProvider {
 		FileInputStream serviceAccountStream = new FileInputStream(credentialsPath);
 
 		//Data provider disappears if uncommented
-		/**
+
 		 try {
 			credentials = ServiceAccountCredentials.fromStream(serviceAccountStream);
 		}
 		catch (Exception e){
 			System.out.println(e);
 		}
-		**/
 
 		// Instantiate a client.
 		BigQuery bigquery =
