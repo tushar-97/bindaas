@@ -2,4 +2,11 @@ dist: xenial
 language: java
 jdk:
   - openjdk8
-install: "mvn clean install"
+#install: "mvn clean install"
+script:
+  - mvn clean install
+  - ls
+  - cd binaries
+  - tar -xvf bindaas*
+  - cd bin
+  - java -Dpid=BINDAAS_INSTANCE -Xmx1024m -jar org.eclipse.osgi_3.10.100.v20150529-1857.jar
