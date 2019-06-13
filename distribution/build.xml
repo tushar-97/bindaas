@@ -63,6 +63,12 @@
 			</fileset>
 		</copy>
 
+		<copy todir="${dist.placeholder.dir}/tools/trusted-app-client" flatten="true">
+			<fileset dir="../tools/trusted-app-client">
+				<include name="target/*.jar" />
+			</fileset>
+		</copy>
+
         <echo>Copying Bindaas Projects Bundles</echo>
 
         <copy todir="${dist.placeholder.dir}/bundles/system/" flatten="true">

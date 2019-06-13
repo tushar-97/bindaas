@@ -53,9 +53,18 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<archive>
 						<manifest>
+							<addClasspath>true</addClasspath>
 							<mainClass>edu.emory.cci.bindaas.trusted_app_client.app.BindaasTrustedClientApp</mainClass>
 						</manifest>
 					</archive>

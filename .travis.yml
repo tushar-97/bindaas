@@ -2,10 +2,13 @@ dist: xenial
 language: java
 jdk:
   - openjdk8
-install: "mvn clean install"
+install: "mvn clean install -Dmaven.test.skip=true "
 script:
-  - ls
   - cd binaries
   - tar -xvf bindaas*
   - cd bin
   - java -Dpid=BINDAAS_INSTANCE -Xmx1024m -jar org.eclipse.osgi_3.10.100.v20150529-1857.jar
+  - sleep 15s
+  - echo "running tests"
+  - mvn test
+  - ./shutdown.sh
