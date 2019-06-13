@@ -13,5 +13,6 @@ script:
   - ./startup.sh
   - sleep 15s
   - echo "running tests"
+  - cd ../..
   - mvn test
   - ./shutdown.sh
