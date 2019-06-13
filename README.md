@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/tushar-97/bindaas.svg?branch=travis-ci)](https://travis-ci.org/tushar-97/bindaas)
+
 # Bindaas Data Integration Middleware Platform
 
 ## Building Bindaas
