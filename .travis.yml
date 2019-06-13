@@ -15,4 +15,5 @@ script:
   - echo "running tests"
   - cd ../..
   - mvn test
+  - cd binaries/bin
   - ./shutdown.sh
