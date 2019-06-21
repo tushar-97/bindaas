@@ -44,6 +44,10 @@
   <!-- Initialize JS Plugins -->
   <script src="/foundation/javascripts/app.js"></script>
 
+  <!-- Initialize Google Platform Library -->
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <meta name="google-signin-client_id" content="16487158071-3dfli9j2b8gcdgth67gcg9mmp1ue756t.apps.googleusercontent.com">
+
   <div class="row">
     <div class="twelve columns">
       <h2>Bindaas</h2>
@@ -64,7 +68,7 @@
     <div class="twelve columns">
   	
   
-    #if ($adminconsoleConfiguration.getAdminConfiguration().getAuthenticationMethod().toString().equals("ldap") || $adminconsoleConfiguration.getAdminConfiguration().getAuthenticationMethod().toString().equals("defaultMethod"))
+    #if ($adminconsoleConfiguration.getAdminConfiguration().getAuthenticationMethod().toString().equals("defaultMethod"))
       <form action="/authenticate" method="post">
 	 	 <fieldset>
 	
@@ -110,6 +114,29 @@
 	  </fieldset>
 	</form>
 	
+#end
+
+#if ($adminconsoleConfiguration.getAdminConfiguration().getAuthenticationMethod().toString().equals("ldap"))
+	<form action="/authenticate" method="post" name="ldapForm" id="ldapForm">
+		<fieldset>
+
+			<legend><h4>Admin Zone</h4></legend>
+
+			<div class="eight columns">
+				<div class="g-signin2" data-onsuccess="onSignIn"></div>
+				<input type="hidden" name="email" id="email" value="" />
+			</div>
+			<script>
+				function onSignIn(googleUser) {
+					var profile = googleUser.getBasicProfile();
+					var auth2 = gapi.auth2.getAuthInstance();
+					document.getElementById("email").value = profile.getEmail();
+					auth2.disconnect();
+					document.getElementById("ldapForm").submit();
+				}
+			</script>
+		</fieldset>
+	</form>
 #end
 
 #if ($adminconsoleConfiguration.getAdminConfiguration().getAuthenticationMethod().toString().equals("openid"))

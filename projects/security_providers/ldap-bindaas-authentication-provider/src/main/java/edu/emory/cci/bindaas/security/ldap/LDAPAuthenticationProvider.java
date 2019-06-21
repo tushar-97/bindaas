@@ -7,8 +7,14 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.naming.Context;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -107,6 +113,53 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 
 		
 		return new BindaasUser(username);
+	}
+
+	public static BindaasUser loginByEmail(String mail, String ldapServer)
+			throws AuthenticationException{
+
+		String username="cn=example.com";
+		String password="root";
+		String cn=null;
+
+		Properties env = new Properties();
+		env.put(Context.INITIAL_CONTEXT_FACTORY,
+				"com.sun.jndi.ldap.LdapCtxFactory");
+		env.put(Context.PROVIDER_URL, ldapServer);
+		env.put(Context.SECURITY_PRINCIPAL, username);
+		env.put(Context.SECURITY_CREDENTIALS, password);
+
+		try {
+			DirContext dctx = new InitialDirContext(env);
+
+			String filter = "(mail="+mail+")";
+
+			SearchControls ctrl = new SearchControls();
+			String[] attributeFilter = { "cn", "mail" };
+			ctrl.setReturningAttributes(attributeFilter);
+			ctrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
+
+			NamingEnumeration answer = dctx.search("", filter, ctrl);
+
+			while (answer.hasMore()) {
+				SearchResult sr = (SearchResult) answer.next();
+				Attributes attrs = sr.getAttributes();
+				Attribute attr = attrs.get("cn");
+				cn = attr.get().toString();
+				log.debug("LDAP Auth succeeded for [" + mail + "]");
+			}
+
+			if(cn==null) {
+				throw new AuthenticationException(mail);
+			}
+
+			dctx.close();
+		} catch (NamingException e) {
+			log.error("Unable to login with config provided",e);
+			throw new AuthenticationException();
+		}
+
+		return new BindaasUser(cn);
 	}
 
 	@Override

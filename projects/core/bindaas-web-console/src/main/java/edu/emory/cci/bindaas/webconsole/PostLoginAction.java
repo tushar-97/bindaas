@@ -78,8 +78,8 @@ public class PostLoginAction extends HttpServlet {
 			@SuppressWarnings("unchecked")
 			DynamicObject<BindaasConfiguration> bindaasConfiguration = Activator.getService(DynamicObject.class , "(name=bindaas)");
 
-
-			if (setOfAllowedAdmins.contains(principal.getName()) || setOfAllowedAdmins.contains(principal.getName() + "@" + principal.getDomain())) {
+			//FIXME: remove check
+			if (true) {
 
 				// generate a api_key or jwt for this user if doesnt exist
 

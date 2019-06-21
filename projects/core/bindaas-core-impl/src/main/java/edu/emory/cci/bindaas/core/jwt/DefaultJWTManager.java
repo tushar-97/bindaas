@@ -1,5 +1,8 @@
 package edu.emory.cci.bindaas.core.jwt;
 
+import java.security.SecureRandom;
+import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -385,6 +388,19 @@ public class DefaultJWTManager implements IJWTManager {
 
 	public void init() throws Exception {
 
+        //FIXME: Write to file required?
+//		SecureRandom sr = new SecureRandom();
+//		byte[] secretArray = new byte[64];
+//		sr.nextBytes(secretArray);
+//		secret = new String(secretArray);
+//		secret="fsdfdskfg3et4723truwewebd";
+//		try (PrintWriter out = new PrintWriter("secret.txt")) {
+//			out.println("secret: "+secret);
+//			out.println("secretArray: "+Arrays.toString(secretArray));
+//		}
+//		catch (Exception e){
+//			log.error(e);
+//		}
 	}
 
 }

@@ -338,6 +338,10 @@ public class SecurityHandler implements RequestHandler,ISecurityHandler {
 
 	@Override
  	public Response handleRequest(Message message, ClassResourceInfo arg1) {
+		//FIXME: Rate limiting via IP address
+//		HttpServletRequest request = (HttpServletRequest)message.get(AbstractHTTPDestination.HTTP_REQUEST);
+//		String ipAddr = request.getRemoteAddr();
+
 		setRequestId(message);
 		Principal authenticatedUser =  null;
 		if(isEnableAuthentication())

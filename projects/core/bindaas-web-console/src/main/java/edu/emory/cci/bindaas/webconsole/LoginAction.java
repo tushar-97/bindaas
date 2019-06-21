@@ -55,7 +55,7 @@ public class LoginAction extends HttpServlet implements Filter{
 		String loginTarget = request.getParameter("loginTarget") !=null ? request.getParameter("loginTarget") : defaultLoginTarget;
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		
+		String email = request.getParameter("email");
 		
 		
 		@SuppressWarnings("unchecked")
@@ -69,7 +69,8 @@ public class LoginAction extends HttpServlet implements Filter{
 				BindaasUser principal = null;
 				if(dynamicAdminConsoleConfiguration.getObject().getAdminConfiguration().getAuthenticationMethod().equals(AuthenticationMethod.ldap))
 				{
-					principal = LDAPAuthenticationProvider.login(username, password , dynamicAdminConsoleConfiguration.getObject().getAdminConfiguration().getLdapUrl() ,dynamicAdminConsoleConfiguration.getObject().getAdminConfiguration().getLdapDNPattern());
+//					principal = LDAPAuthenticationProvider.login(username, password , dynamicAdminConsoleConfiguration.getObject().getAdminConfiguration().getLdapUrl() ,dynamicAdminConsoleConfiguration.getObject().getAdminConfiguration().getLdapDNPattern());
+					principal = LDAPAuthenticationProvider.loginByEmail(email , dynamicAdminConsoleConfiguration.getObject().getAdminConfiguration().getLdapUrl());
 				}
 				else if(dynamicAdminConsoleConfiguration.getObject().getAdminConfiguration().getAuthenticationMethod().equals(AuthenticationMethod.defaultMethod))
 				{
