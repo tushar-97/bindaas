@@ -28,6 +28,9 @@ public class BindaasUser implements Principal {
 		{
 			domain = "localhost";
 			this.name = name;
+			properties.put(FIRST_NAME,name);
+			properties.put(LAST_NAME,name);
+			properties.put(EMAIL_ADDRESS,name+"@"+domain);
 		}
 	}
 	

@@ -76,35 +76,25 @@ public class PostLoginAction extends HttpServlet {
 			Set<String> setOfAllowedAdmins = dynamicAdminConsoleConfiguration
 					.getObject().getAdminAccounts();
 			@SuppressWarnings("unchecked")
-			DynamicObject<BindaasConfiguration> bindaasConfiguration = Activator.getService(DynamicObject.class , "(name=bindaas)");
+			DynamicObject<BindaasConfiguration> bindaasConfiguration = Activator.
+					getService(DynamicObject.class , "(name=bindaas)");
 
-			//FIXME: remove check
-			if (true) {
-
-				// generate a api_key or jwt for this user if doesnt exist
-
-				if(bindaasConfiguration.getObject().getAuthenticationProtocol().equals("JWT")){
-					principal = generateJWT(principal);
-				}
-				else {
-					principal = generateApiKey(principal);
-				}
-				response.sendRedirect(loginTarget);
-
-			} else {
-
-				try {
-					request.getSession().setAttribute("loggedInUser", null);
-					loginView.generateLoginView(request, response, loginTarget,
-							"You are not authorized to access this resource");
-
-				} catch (Exception e1) {
-					log.error(e1);
-					ErrorView.handleError(response, new Exception(
-							"Authentication System unavailable"));
-				}
-
+			if (setOfAllowedAdmins.contains(principal.getName()) || setOfAllowedAdmins.contains(principal.getName() + "@" + principal.getDomain())) {
+				principal.addProperty("role","admin");
 			}
+			else if(principal.getProperty("role") == null) {
+				principal.addProperty("role","read-only");
+			}
+
+			// generate a api_key or jwt for this user if doesnt exist
+
+			if(bindaasConfiguration.getObject().getAuthenticationProtocol().equals("JWT")){
+				principal = generateJWT(principal);
+			}
+			else {
+				principal = generateApiKey(principal);
+			}
+			response.sendRedirect(loginTarget);
 
 		} catch (Exception e) {
 			log.error(e);

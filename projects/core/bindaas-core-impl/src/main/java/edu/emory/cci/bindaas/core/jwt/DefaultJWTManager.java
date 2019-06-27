@@ -65,7 +65,12 @@ public class DefaultJWTManager implements IJWTManager {
 			String lastName = bindaasUser.getProperty(BindaasUser.LAST_NAME) != null ? bindaasUser
 					.getProperty(BindaasUser.LAST_NAME).toString()
 					: bindaasUser.getName();
-			
+
+			// default user role if none is specified
+			String userRole = bindaasUser.getProperty("role") !=null ?
+					bindaasUser.getProperty("role").toString()
+					:"read-only";
+
 			@SuppressWarnings("unchecked")
 			List<UserRequest> listOfValidTokens = (List<UserRequest>) session
 					.createCriteria(UserRequest.class)
@@ -92,6 +97,7 @@ public class DefaultJWTManager implements IJWTManager {
 			String jws = JWT.create()
 					.withIssuer("bindaas")
 					.withExpiresAt(dateExpires)
+					.withAudience(userRole)
 					.sign(Algorithm.HMAC256(secret));
 
 			UserRequest userRequest = new UserRequest();
@@ -274,7 +280,7 @@ public class DefaultJWTManager implements IJWTManager {
 
 			@SuppressWarnings("unchecked")
 			List<UserRequest> listOfValidTokens = (List<UserRequest>) session.createCriteria(UserRequest.class).
-					add(Restrictions.eq("stage",	Stage.accepted.name())).
+					add(Restrictions.eq("stage", Stage.accepted.name())).
 					add(Restrictions.eq("jwt", jws)).
 					list();
 

@@ -115,12 +115,13 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 		return new BindaasUser(username);
 	}
 
-	public static BindaasUser loginByEmail(String mail, String ldapServer)
+	public static BindaasUser loginByEmail(String firstName, String lastName, String mail, String ldapServer)
 			throws AuthenticationException{
 
 		String username="cn=example.com";
 		String password="root";
-		String cn=null;
+		String userCN="";
+		String userRole="read-only";
 
 		Properties env = new Properties();
 		env.put(Context.INITIAL_CONTEXT_FACTORY,
@@ -132,25 +133,38 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 		try {
 			DirContext dctx = new InitialDirContext(env);
 
-			String filter = "(mail="+mail+")";
+			String filterUser = "(&(objectclass=person)(mail="+mail+"))";
 
 			SearchControls ctrl = new SearchControls();
-			String[] attributeFilter = { "cn", "mail" };
+			String[] attributeFilter = { "cn" };
 			ctrl.setReturningAttributes(attributeFilter);
 			ctrl.setSearchScope(SearchControls.SUBTREE_SCOPE);
 
-			NamingEnumeration answer = dctx.search("", filter, ctrl);
+			NamingEnumeration answer = dctx.search("", filterUser, ctrl);
 
 			while (answer.hasMore()) {
 				SearchResult sr = (SearchResult) answer.next();
 				Attributes attrs = sr.getAttributes();
 				Attribute attr = attrs.get("cn");
-				cn = attr.get().toString();
+				userCN = attr.get().toString();
 				log.debug("LDAP Auth succeeded for [" + mail + "]");
 			}
 
-			if(cn==null) {
+			if(userCN==null) {
 				throw new AuthenticationException(mail);
+			}
+			else {
+				String filterRole = "(&(objectclass=groupOfNames)(member=cn="+userCN+",ou=People,dc=example,dc=com))";
+
+				answer = dctx.search("", filterRole, ctrl);
+
+				while (answer.hasMore()) {
+					SearchResult sr = (SearchResult) answer.next();
+					Attributes attrs = sr.getAttributes();
+					Attribute attr = attrs.get("cn");
+					userRole = attr.get().toString();
+					log.debug("Got role as [" + userRole + "]");
+				}
 			}
 
 			dctx.close();
@@ -159,7 +173,12 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 			throw new AuthenticationException();
 		}
 
-		return new BindaasUser(cn);
+		BindaasUser principal = new BindaasUser(userCN);
+		principal.addProperty(BindaasUser.FIRST_NAME,firstName);
+		principal.addProperty(BindaasUser.LAST_NAME,lastName);
+		principal.addProperty(BindaasUser.EMAIL_ADDRESS,mail);
+		principal.addProperty("role",userRole);
+		return principal;
 	}
 
 	@Override

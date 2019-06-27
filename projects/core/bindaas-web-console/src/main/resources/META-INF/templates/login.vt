@@ -124,12 +124,16 @@
 
 			<div class="eight columns">
 				<div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <input type="hidden" name="firstName" id="firstName" value="" />
+                <input type="hidden" name="lastName" id="lastName" value="" />
 				<input type="hidden" name="email" id="email" value="" />
 			</div>
 			<script>
 				function onSignIn(googleUser) {
 					var profile = googleUser.getBasicProfile();
 					var auth2 = gapi.auth2.getAuthInstance();
+					document.getElementById("firstName").value = profile.getGivenName()
+					document.getElementById("lastName").value = profile.getFamilyName()
 					document.getElementById("email").value = profile.getEmail();
 					auth2.disconnect();
 					document.getElementById("ldapForm").submit();
