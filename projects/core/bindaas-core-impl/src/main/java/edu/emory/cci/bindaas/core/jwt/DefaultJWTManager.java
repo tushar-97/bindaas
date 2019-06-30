@@ -67,8 +67,8 @@ public class DefaultJWTManager implements IJWTManager {
 					: bindaasUser.getName();
 
 			// default user role if none is specified
-			String userRole = bindaasUser.getProperty("role") !=null ?
-					bindaasUser.getProperty("role").toString()
+			String userRole = bindaasUser.getProperty(BindaasUser.ROLE) !=null ?
+					bindaasUser.getProperty(BindaasUser.ROLE).toString()
 					:"read-only";
 
 			@SuppressWarnings("unchecked")
@@ -97,7 +97,7 @@ public class DefaultJWTManager implements IJWTManager {
 			String jws = JWT.create()
 					.withIssuer("bindaas")
 					.withExpiresAt(dateExpires)
-					.withAudience(userRole)
+					.withAudience(userRole)  //FIXME: custom claim?
 					.sign(Algorithm.HMAC256(secret));
 
 			UserRequest userRequest = new UserRequest();

@@ -140,7 +140,7 @@ public class AdminServlet extends AbstractRequestHandler {
 						"from HistoryLog order by activityDate desc").setMaxResults(MAX_DISPLAY_THRESHOLD).list();
 
 				// if role is not admin add restrictions
-				if(!principal.getProperty("role").toString().equals("admin")) {
+				if(!principal.getProperty(BindaasUser.ROLE).toString().equals("admin")) {
 					pendingRequests = session.createCriteria(UserRequest.class).add(Restrictions.eq("stage", "pending")).
 							add(Restrictions.eq("emailAddress", principal.getProperty(BindaasUser.EMAIL_ADDRESS))).
 							add(Restrictions.isNotNull(protocol))

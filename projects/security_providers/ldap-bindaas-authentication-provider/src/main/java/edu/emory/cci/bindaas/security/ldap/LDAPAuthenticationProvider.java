@@ -177,7 +177,7 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 		principal.addProperty(BindaasUser.FIRST_NAME,firstName);
 		principal.addProperty(BindaasUser.LAST_NAME,lastName);
 		principal.addProperty(BindaasUser.EMAIL_ADDRESS,mail);
-		principal.addProperty("role",userRole);
+		principal.addProperty(BindaasUser.ROLE,userRole);
 		return principal;
 	}
 

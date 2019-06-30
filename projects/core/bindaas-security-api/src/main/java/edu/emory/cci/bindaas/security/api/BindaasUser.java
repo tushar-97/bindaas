@@ -9,7 +9,8 @@ public class BindaasUser implements Principal {
 	public final static String EMAIL_ADDRESS = "email";
 	public final static String FIRST_NAME = "firstName";
 	public final static String LAST_NAME = "lastName";
-	
+	public final static String ROLE = "role";
+
 	private String name;
 	private String domain;
 	private Map<String,Object> properties;

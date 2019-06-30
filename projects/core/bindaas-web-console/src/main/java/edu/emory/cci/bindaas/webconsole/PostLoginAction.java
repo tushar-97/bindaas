@@ -80,10 +80,10 @@ public class PostLoginAction extends HttpServlet {
 					getService(DynamicObject.class , "(name=bindaas)");
 
 			if (setOfAllowedAdmins.contains(principal.getName()) || setOfAllowedAdmins.contains(principal.getName() + "@" + principal.getDomain())) {
-				principal.addProperty("role","admin");
+				principal.addProperty(BindaasUser.ROLE,"admin");
 			}
-			else if(principal.getProperty("role") == null) {
-				principal.addProperty("role","read-only");
+			else if(principal.getProperty(BindaasUser.ROLE) == null) {
+				principal.addProperty(BindaasUser.ROLE,"read-only");
 			}
 
 			// generate a api_key or jwt for this user if doesnt exist
