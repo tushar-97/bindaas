@@ -31,11 +31,14 @@ public class MongoDBDeleteHandler implements IDeleteHandler {
 
 	private Log log = LogFactory.getLog(getClass());
 	private JsonParser parser = new JsonParser();
+	public final static String ROLE = "role";
 
 	@Override
 	public QueryResult delete(JsonObject dataSource, String deleteQueryToExecute , Map<String,String> runtimeParamters , RequestContext requestContext)
 			throws AbstractHttpCodeException {
-		
+
+		log.info("Role: "+requestContext.getAttributes().get(ROLE));
+
 		try{
 			MongoDBModifyOperationDescriptor operationDescriptor = null;
 			try{

@@ -40,7 +40,7 @@ public class MongoDBQueryHandler implements IQueryHandler {
     private Log log = LogFactory.getLog(getClass());
     private OutputFormatRegistry registry;
     private JsonParser parser = new JsonParser();
-    
+    public final static String ROLE = "role";
     private Map<String, DBCollection> dbCollectionMap = new HashMap<String, DBCollection>();
 
     public OutputFormatRegistry getRegistry() {
@@ -55,7 +55,8 @@ public class MongoDBQueryHandler implements IQueryHandler {
     public QueryResult query(JsonObject dataSource,
             JsonObject outputFormatProps, String queryToExecute, Map<String,String> runtimeParameters, RequestContext requestContext)
             throws AbstractHttpCodeException {
-        
+
+        log.info("Role: "+requestContext.getAttributes().get(ROLE));
         try{
             if(outputFormatProps!=null)
             {

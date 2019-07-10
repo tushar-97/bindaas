@@ -83,7 +83,7 @@ public class PostLoginAction extends HttpServlet {
 				principal.addProperty(BindaasUser.ROLE,"admin");
 			}
 			else if(principal.getProperty(BindaasUser.ROLE) == null) {
-				principal.addProperty(BindaasUser.ROLE,"read-only");
+				principal.addProperty(BindaasUser.ROLE,"default-role");
 			}
 
 			// generate a api_key or jwt for this user if doesnt exist

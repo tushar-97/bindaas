@@ -44,6 +44,7 @@ import edu.emory.cci.bindaas.framework.util.StandardMimeType;
 public class MongoDBSubmitHandler implements ISubmitHandler {
 
 	private Log log = LogFactory.getLog(getClass());
+	public final static String ROLE = "role";
 
 	@Override
 	public QueryResult submit(JsonObject dataSource,
@@ -66,6 +67,7 @@ public class MongoDBSubmitHandler implements ISubmitHandler {
 			JsonObject endpointProperties, String data, RequestContext requestContext)
 			throws AbstractHttpCodeException {
 		MongoClient mongo = null;
+		log.info("Role: "+requestContext.getAttributes().get(ROLE));
 		try {
 			DataSourceConfiguration configuration = GSONUtil.getGSONInstance()
 					.fromJson(dataSource, DataSourceConfiguration.class);

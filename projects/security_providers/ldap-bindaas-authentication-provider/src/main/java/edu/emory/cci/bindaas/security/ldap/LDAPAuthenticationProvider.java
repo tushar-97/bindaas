@@ -121,7 +121,7 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 		String username="cn=example.com";
 		String password="root";
 		String userCN="";
-		String userRole="read-only";
+		String userRole="default-role";
 
 		Properties env = new Properties();
 		env.put(Context.INITIAL_CONTEXT_FACTORY,
@@ -170,7 +170,7 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 			dctx.close();
 		} catch (NamingException e) {
 			log.error("Unable to login with config provided",e);
-			throw new AuthenticationException();
+			throw new AuthenticationException(mail);
 		}
 
 		BindaasUser principal = new BindaasUser(userCN);

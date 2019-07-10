@@ -69,7 +69,7 @@ public class DefaultJWTManager implements IJWTManager {
 			// default user role if none is specified
 			String userRole = bindaasUser.getProperty(BindaasUser.ROLE) !=null ?
 					bindaasUser.getProperty(BindaasUser.ROLE).toString()
-					:"read-only";
+					:"default-role";
 
 			@SuppressWarnings("unchecked")
 			List<UserRequest> listOfValidTokens = (List<UserRequest>) session
@@ -389,6 +389,11 @@ public class DefaultJWTManager implements IJWTManager {
 				add(Restrictions.eq("id", id)).list();
 
 		return userRequest.get(0).getEmailAddress();
+	}
+
+	public static String getAudience(String token){
+		DecodedJWT jwt = JWT.decode(token);
+		return jwt.getAudience().get(0);
 	}
 
 
