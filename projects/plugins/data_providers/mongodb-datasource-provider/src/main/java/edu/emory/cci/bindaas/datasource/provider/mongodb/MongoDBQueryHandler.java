@@ -56,7 +56,7 @@ public class MongoDBQueryHandler implements IQueryHandler {
             JsonObject outputFormatProps, String queryToExecute, Map<String,String> runtimeParameters, RequestContext requestContext)
             throws AbstractHttpCodeException {
 
-        log.info("Role: "+requestContext.getAttributes().get(ROLE));
+//        log.info("Role: "+requestContext.getAttributes().get(ROLE));
         try{
             if(outputFormatProps!=null)
             {
@@ -144,7 +144,7 @@ public class MongoDBQueryHandler implements IQueryHandler {
                     // use operationDescriptor to route to correct handler
                     
                     IOperationHandler operationHandler = operationDescriptor.get_operation().getHandler();
-                    QueryResult result = operationHandler.handleOperation(dbCollectionMap.get(dbCollectionKey), props , operationDescriptor.get_operation_args(), registry);
+                    QueryResult result = operationHandler.handleOperation(dbCollectionMap.get(dbCollectionKey), props , operationDescriptor.get_operation_args(), registry, configuration.isAuthorization());
                     return result;
                     
                     

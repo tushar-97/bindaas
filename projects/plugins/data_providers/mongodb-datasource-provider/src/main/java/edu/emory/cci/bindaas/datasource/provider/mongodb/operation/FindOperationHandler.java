@@ -1,5 +1,8 @@
 package edu.emory.cci.bindaas.datasource.provider.mongodb.operation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,7 +28,7 @@ public class FindOperationHandler implements IOperationHandler {
 	private Log log = LogFactory.getLog(getClass());
 	@Override
 	public QueryResult handleOperation(DBCollection collection,
-			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry )
+			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization )
 			throws ProviderException {
 	
 		FindOperationDescriptor operationDescriptor = GSONUtil.getGSONInstance().fromJson(operationArguments, FindOperationDescriptor.class);
@@ -40,15 +43,29 @@ public class FindOperationHandler implements IOperationHandler {
 				DBObject fields = operationDescriptor.fields == null ? null : (DBObject) JSON.parse(operationDescriptor.fields.toString());
 				DBObject sort = operationDescriptor.sort == null ? null : (DBObject) JSON.parse(operationDescriptor.sort.toString());
 
-				DBCursor cursor = null;
+				DBCursor cursor = collection.find(query);
+
+				if(enableAuthorization){
+					List<String> ids = new ArrayList<String>(cursor.count());
+
+					for (DBObject o : cursor) {
+						ids.add(o.get("_id").toString());
+					}
+
+					List<String> list = new ArrayList<String>();
+					list.add("2");
+					list.add("4");
+					list.add("5d2619a8975a79640cefe6e2");
+					list.add("5d272dcb011328f5b529e4b4");
+
+					if(!list.containsAll(ids)){
+						throw new Exception("Not authorized. Check query/role again");
+					}
+				}
 
 				if(fields!=null)
 				{
 					cursor = collection.find(query , fields);
-				}
-				else
-				{
-					cursor = collection.find(query);
 				}
 
 				if(operationDescriptor.sort !=null)

@@ -1,6 +1,8 @@
 package edu.emory.cci.bindaas.datasource.provider.mongodb.operation;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.Expose;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
@@ -26,13 +29,34 @@ public class CountOperationHandler implements IOperationHandler {
 	
 	@Override
 	public QueryResult handleOperation(DBCollection collection,
-			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry)
+			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization)
 			throws ProviderException {
 		CountOperationDescriptor operationDescriptor = GSONUtil.getGSONInstance().fromJson(operationArguments, CountOperationDescriptor.class);
 		validateArguments(operationDescriptor);
 		
 			try{
 				DBObject query = (DBObject) JSON.parse(operationDescriptor.query.toString());
+
+				DBCursor cursor = collection.find(query);
+
+				if(enableAuthorization){
+					List<String> ids = new ArrayList<String>(cursor.count());
+
+					for (DBObject o : cursor) {
+						ids.add(o.get("_id").toString());
+					}
+
+					List<String> list = new ArrayList<String>();
+					list.add("2");
+					list.add("4");
+					list.add("5d2619a8975a79640cefe6e2");
+					list.add("5d272dcb011328f5b529e4b4");
+
+					if(!list.containsAll(ids)){
+						throw new Exception("Not authorized. Check query/role again");
+					}
+				}
+
 				long count = collection.count(query);
 				JsonObject result = new JsonObject();
 				result.add("query", operationDescriptor.query);

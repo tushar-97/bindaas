@@ -1,6 +1,8 @@
 package edu.emory.cci.bindaas.datasource.provider.mongodb.operation;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
@@ -25,16 +28,45 @@ public class DeleteOperationHandler implements IOperationHandler{
 	private Log log = LogFactory.getLog(getClass());
 	@Override
 	public QueryResult handleOperation(DBCollection collection,
-			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry )
+			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization )
 			throws ProviderException {
 	
 		DeleteOperationDescriptor operationDescriptor = GSONUtil.getGSONInstance().fromJson(operationArguments, DeleteOperationDescriptor.class);
 		validateArguments(operationDescriptor);
-		WriteResult writeResult = collection.remove( DBObject.class.cast(JSON.parse(operationDescriptor.query.toString())));
-		QueryResult queryResult = new QueryResult();
-		queryResult.setData(new ByteArrayInputStream( String.format("{ \"rowsAffected\" : %s ,  \"operation\" : \"delete\" , \"query\" : %s }", writeResult.getN() + "" , operationDescriptor.query.toString() ).getBytes()));
-		queryResult.setMimeType(StandardMimeType.JSON.toString());
-		return queryResult;
+		DBObject query = (DBObject) JSON.parse(operationDescriptor.query.toString());
+		DBCursor cursor = collection.find(query);
+
+		try {
+			if(enableAuthorization){
+				List<String> ids = new ArrayList<String>(cursor.count());
+
+				for (DBObject o : cursor) {
+					ids.add(o.get("_id").toString());
+				}
+
+				List<String> list = new ArrayList<String>();
+				list.add("2");
+				list.add("4");
+				list.add("5d2619a8975a79640cefe6e2");
+				list.add("5d272dcb011328f5b529e4b4");
+
+				if(!list.containsAll(ids)){
+					throw new Exception("Not authorized. Check query/role again");
+				}
+			}
+
+
+			WriteResult writeResult = collection.remove(query);
+			QueryResult queryResult = new QueryResult();
+			queryResult.setData(new ByteArrayInputStream( String.format("{ \"rowsAffected\" : %s ,  \"operation\" : \"delete\" , \"query\" : %s }", writeResult.getN() + "" , operationDescriptor.query.toString() ).getBytes()));
+			queryResult.setMimeType(StandardMimeType.JSON.toString());
+			return queryResult;
+		}
+		catch(Exception e)
+		{
+			log.error(e);
+			throw new ProviderException(MongoDBProvider.class.getName() , MongoDBProvider.VERSION ,e);
+		}
 	}
 	
 	
