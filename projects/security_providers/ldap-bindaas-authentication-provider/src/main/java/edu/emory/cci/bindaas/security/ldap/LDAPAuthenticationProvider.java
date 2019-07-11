@@ -118,6 +118,7 @@ public class LDAPAuthenticationProvider implements IAuthenticationProvider {
 	public static BindaasUser loginByEmail(String firstName, String lastName, String mail, String ldapServer)
 			throws AuthenticationException{
 
+		//FiXME: remove hardcoded values below
 		String username="cn=example.com";
 		String password="root";
 		String userCN="";

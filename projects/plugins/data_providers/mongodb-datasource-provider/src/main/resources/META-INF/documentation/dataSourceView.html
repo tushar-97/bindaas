@@ -15,8 +15,16 @@
 		<label>Password (Optional)</label>
 		<span class="has-tip tip-left" data-width="210" title="Password for connecting to the MongoDB database"><input type="password" id="mongo_password" /></span>
 
+		<div id = "mongo_rules">
+			<label>Authorization Rules</label>
+			<span class="has-tip tip-left" data-width="210" title="Authorization rules for the MongoDB database"><input type="text" id="mongo_authorization_rules" /></span>
+		</div>
+
+
 		<span class="has-tip tip-left" data-width="210" title="This option will generate submit API to upload data in CSV and JSON formats"><label for="mongo_auto_init"><input type="checkbox" CHECKED id="mongo_auto_init">  Generate Default API</label></span>
-		
+
+		<span class="has-tip tip-left" data-width="210" title="This option will enable authorization"><label for="mongo_authorization"><input type="checkbox" id="mongo_authorization">  Enable Authorization</label></span>
+
 		<script>
 			
 			$("#mongo_host").keyup(function ()
@@ -62,6 +70,20 @@
 			{
 				updateProviderFieldMongo();
 			});
+
+			$("#mongo_authorization_rules").keyup(function ()
+			{
+				updateProviderFieldMongo();
+			});
+			$("#mongo_authorization").click(function ()
+			{
+				updateProviderFieldMongo();
+			});
+
+			$("#mongo_authorization").change(function ()
+			{
+				updateProviderFieldMongo();
+			});
 		
 			
 			   
@@ -76,13 +98,23 @@
 		   	 dataSourceJson.username = $("#mongo_username").attr("value");
 		   	 dataSourceJson.password = $("#mongo_password").attr("value");
 
-		   	 if($('#mongo_auto_init').attr('checked')) {
+			   if($('#mongo_auto_init').attr('checked')) {
 					  dataSourceJson.initialize = true;
-					 
+
 					} else {
 					  dataSourceJson.initialize = false;
 					 
 					}
+
+		   	 if($('#mongo_authorization').attr('checked')) {
+		   	 	dataSourceJson.authorization = true;
+		   	 	$('#mongo_rules').show();
+		   	 	dataSourceJson.authorizationRules = $("#mongo_authorization_rules").attr("value");
+
+			 } else {
+		   	 	dataSourceJson.authorization = false;
+				 $('#mongo_rules').hide();
+			 }
 		   	 
 		   	 
 		   	 $("#dataSource").attr("value" , JSON.stringify(dataSourceJson));
@@ -102,6 +134,7 @@
 				   $("#mongo_authenticationDb").attr("value", dataSourceJson.authenticationDb);
 				   $("#mongo_username").attr("value", dataSourceJson.username);
 				   $("#mongo_password").attr("value", dataSourceJson.password);
+				   $("#mongo_authorization_rules").attr("value", dataSourceJson.authorizationRules);
 
 				   if(dataSourceJson.initialize == true) {
 						  $('#mongo_auto_init').attr('checked' , "true");
@@ -109,7 +142,12 @@
 						} else {
 							$('#mongo_auto_init').removeAttr('checked');
 						}
-			   	
+				   if(dataSourceJson.authorization === true ) {
+				   		$('#mongo_authorization').attr('checked' , "true");
+				   }
+				   else {
+					   $('#mongo_authorization').removeAttr('checked');
+				   }
 				   
 			   }catch(e){}
 			   
@@ -138,6 +176,13 @@
 						$("#mongo_collection").focus();
 					});
 
+					if($('#mongo_authorization').attr('checked')) {
+						ValidationObject.addConstraint("mongo_authorization_rules", $.parseJSON($("#mongo_authorization_rules").attr("value")), function() {
+							alert("Rules not specified");
+							$("#mongo_authorization_rules").focus();
+						});
+					}
+
 				} else {
 
 					ValidationObject.removeConstraint("mongo_host");
@@ -147,6 +192,10 @@
 					ValidationObject.removeConstraint("mongo_db");
 					
 					ValidationObject.removeConstraint("mongo_collection");
+					if(!$('#mongo_authorization').attr('checked')) {
+						ValidationObject.removeConstraint("mongo_authorization_rules");
+					}
+
 
 				}
 

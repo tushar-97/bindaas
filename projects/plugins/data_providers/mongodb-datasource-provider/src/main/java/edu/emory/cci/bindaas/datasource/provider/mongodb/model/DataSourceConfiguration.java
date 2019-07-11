@@ -11,15 +11,24 @@ public class DataSourceConfiguration {
 	@Expose private String authenticationDb;
 	@Expose private String username;
 	@Expose private String password;
+	@Expose private String authorizationRules;
 	@Expose private boolean initialize;
-	
-	
+	@Expose private boolean authorization;
+
 	public boolean isInitialize() {
 		return initialize;
 	}
 
 	public void setInitialize(boolean initialize) {
 		this.initialize = initialize;
+	}
+
+	public boolean isAuthorization() {
+		return authorization;
+	}
+
+	public void setAuthorization (boolean authorization) {
+		this.authorization = authorization;
 	}
 
 	private void check(String propName,String propValue) throws Exception
@@ -88,6 +97,14 @@ public class DataSourceConfiguration {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getAuthorizationRules() {
+		return authorizationRules;
+	}
+
+	public void setAuthorizationRules(String authorizationRules) {
+		this.authorizationRules = authorizationRules;
 	}
 
 }
