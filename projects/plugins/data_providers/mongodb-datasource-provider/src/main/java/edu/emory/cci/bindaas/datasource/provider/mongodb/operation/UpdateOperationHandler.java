@@ -25,7 +25,7 @@ public class UpdateOperationHandler implements IOperationHandler{
 	private Log log = LogFactory.getLog(getClass());
 	@Override
 	public QueryResult handleOperation(DBCollection collection,
-			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry )
+			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization )
 			throws ProviderException {
 	
 		UpdateOperationDescriptor operationDescriptor = GSONUtil.getGSONInstance().fromJson(operationArguments, UpdateOperationDescriptor.class);
