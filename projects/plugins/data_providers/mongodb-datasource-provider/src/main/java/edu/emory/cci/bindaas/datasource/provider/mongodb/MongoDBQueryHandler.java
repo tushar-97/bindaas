@@ -56,7 +56,6 @@ public class MongoDBQueryHandler implements IQueryHandler {
             JsonObject outputFormatProps, String queryToExecute, Map<String,String> runtimeParameters, RequestContext requestContext)
             throws AbstractHttpCodeException {
 
-//        log.info("Role: "+requestContext.getAttributes().get(ROLE));
         try{
             if(outputFormatProps!=null)
             {
@@ -103,7 +102,7 @@ public class MongoDBQueryHandler implements IQueryHandler {
                         findArguments.setQuery(parser.parse(queryToExecute).getAsJsonObject());
                         operationDescriptor.set_operation_args(GSONUtil.getGSONInstance().toJsonTree(findArguments).getAsJsonObject());
                     }
-                    
+
                         
                     // get DB collection
                     DataSourceConfiguration configuration = GSONUtil.getGSONInstance().fromJson(dataSource, DataSourceConfiguration.class);
@@ -144,7 +143,8 @@ public class MongoDBQueryHandler implements IQueryHandler {
                     // use operationDescriptor to route to correct handler
                     
                     IOperationHandler operationHandler = operationDescriptor.get_operation().getHandler();
-                    QueryResult result = operationHandler.handleOperation(dbCollectionMap.get(dbCollectionKey), props , operationDescriptor.get_operation_args(), registry, configuration.isAuthorization());
+                    QueryResult result = operationHandler.handleOperation(dbCollectionMap.get(dbCollectionKey), props , operationDescriptor.get_operation_args(), registry,
+                            configuration.isAuthorization(), requestContext.getAttributes().get(ROLE).toString());
                     return result;
                     
                     

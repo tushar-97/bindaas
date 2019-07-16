@@ -25,7 +25,7 @@ public class MapReduceOperationHandler implements IOperationHandler {
 	private Log log = LogFactory.getLog(getClass());
 	@Override
 	public QueryResult handleOperation(DBCollection collection,
-			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization)
+			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization, String userRole)
 			throws ProviderException {
 		MapReduceOperationDescriptor operationDescriptor = GSONUtil.getGSONInstance().fromJson(operationArguments, MapReduceOperationDescriptor.class);
 		validateArguments(operationDescriptor);

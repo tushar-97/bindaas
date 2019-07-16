@@ -23,13 +23,15 @@ import edu.emory.cci.bindaas.framework.model.QueryResult;
 import edu.emory.cci.bindaas.framework.util.GSONUtil;
 import edu.emory.cci.bindaas.framework.util.StandardMimeType;
 
+import static edu.emory.cci.bindaas.datasource.provider.mongodb.MongoDBProvider.getRulesMap;
+
 public class CountOperationHandler implements IOperationHandler {
 
 	private Log log = LogFactory.getLog(getClass());
 	
 	@Override
 	public QueryResult handleOperation(DBCollection collection,
-			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization)
+			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization, String userRole)
 			throws ProviderException {
 		CountOperationDescriptor operationDescriptor = GSONUtil.getGSONInstance().fromJson(operationArguments, CountOperationDescriptor.class);
 		validateArguments(operationDescriptor);
@@ -46,11 +48,11 @@ public class CountOperationHandler implements IOperationHandler {
 						ids.add(o.get("_id").toString());
 					}
 
-					List<String> list = new ArrayList<String>();
-					list.add("2");
-					list.add("4");
-					list.add("5d2619a8975a79640cefe6e2");
-					list.add("5d272dcb011328f5b529e4b4");
+					if(!getRulesMap().containsKey(userRole)) {
+						throw new Exception("No authorization rules specified for you");
+					}
+
+					List<String> list = getRulesMap().get(userRole);
 
 					if(!list.containsAll(ids)){
 						throw new Exception("Not authorized. Check query/role again");

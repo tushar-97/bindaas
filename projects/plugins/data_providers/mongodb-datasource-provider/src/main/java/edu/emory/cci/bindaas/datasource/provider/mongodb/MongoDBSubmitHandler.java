@@ -67,7 +67,7 @@ public class MongoDBSubmitHandler implements ISubmitHandler {
 			JsonObject endpointProperties, String data, RequestContext requestContext)
 			throws AbstractHttpCodeException {
 		MongoClient mongo = null;
-		log.info("Role: "+requestContext.getAttributes().get(ROLE));
+
 		try {
 			DataSourceConfiguration configuration = GSONUtil.getGSONInstance()
 					.fromJson(dataSource, DataSourceConfiguration.class);

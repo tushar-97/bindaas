@@ -23,7 +23,7 @@ public class GroupOperationHandler implements IOperationHandler {
 	private Log log = LogFactory.getLog(getClass());
 	@Override
 	public QueryResult handleOperation(DBCollection collection,
-			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization)
+			OutputFormatProps outputFormatProps, JsonObject operationArguments , OutputFormatRegistry registry, Boolean enableAuthorization, String userRole)
 			throws ProviderException {
 		GroupOperationDescriptor operationDescriptor = GSONUtil.getGSONInstance().fromJson(operationArguments, GroupOperationDescriptor.class);
 		validateArguments(operationDescriptor);

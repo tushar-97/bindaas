@@ -106,7 +106,7 @@
 					 
 					}
 
-		   	 if($('#mongo_authorization').attr('checked')) {
+		   	 if($('#mongo_authorization').is(":checked")) {
 		   	 	dataSourceJson.authorization = true;
 		   	 	$('#mongo_rules').show();
 		   	 	dataSourceJson.authorizationRules = $("#mongo_authorization_rules").attr("value");
@@ -176,13 +176,6 @@
 						$("#mongo_collection").focus();
 					});
 
-					if($('#mongo_authorization').attr('checked')) {
-						ValidationObject.addConstraint("mongo_authorization_rules", $.parseJSON($("#mongo_authorization_rules").attr("value")), function() {
-							alert("Rules not specified");
-							$("#mongo_authorization_rules").focus();
-						});
-					}
-
 				} else {
 
 					ValidationObject.removeConstraint("mongo_host");
@@ -192,10 +185,6 @@
 					ValidationObject.removeConstraint("mongo_db");
 					
 					ValidationObject.removeConstraint("mongo_collection");
-					if(!$('#mongo_authorization').attr('checked')) {
-						ValidationObject.removeConstraint("mongo_authorization_rules");
-					}
-
 
 				}
 

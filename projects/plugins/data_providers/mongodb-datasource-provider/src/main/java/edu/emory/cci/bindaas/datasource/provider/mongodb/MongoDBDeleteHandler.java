@@ -37,8 +37,6 @@ public class MongoDBDeleteHandler implements IDeleteHandler {
 	public QueryResult delete(JsonObject dataSource, String deleteQueryToExecute , Map<String,String> runtimeParamters , RequestContext requestContext)
 			throws AbstractHttpCodeException {
 
-//		log.info("Role: "+requestContext.getAttributes().get(ROLE));
-
 		try{
 			MongoDBModifyOperationDescriptor operationDescriptor = null;
 			try{
@@ -83,7 +81,8 @@ public class MongoDBDeleteHandler implements IDeleteHandler {
 				// use operationDescriptor to route to correct handler
 				
 				IOperationHandler operationHandler = operationDescriptor.get_operation().getHandler();
-				QueryResult result = operationHandler.handleOperation(collection, null , operationDescriptor.get_operation_args(), null, configuration.isAuthorization());
+				QueryResult result = operationHandler.handleOperation(collection, null , operationDescriptor.get_operation_args(), null,
+						configuration.isAuthorization(), requestContext.getAttributes().get(ROLE).toString());
 				return result;
 				
 			} catch (Exception e) {
