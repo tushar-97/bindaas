@@ -136,6 +136,7 @@ public class AdminServlet extends AbstractRequestHandler {
 						add(Restrictions.isNotNull(protocol))
 						.addOrder(Order.desc("requestDate")).setMaxResults(MAX_DISPLAY_THRESHOLD).list();
 
+				//FIXME: make history log protocol dependent
 				List<?> historyLog = session.createQuery(
 						"from HistoryLog order by activityDate desc").setMaxResults(MAX_DISPLAY_THRESHOLD).list();
 

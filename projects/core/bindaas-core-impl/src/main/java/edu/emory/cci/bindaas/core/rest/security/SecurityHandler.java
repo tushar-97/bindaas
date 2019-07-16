@@ -387,9 +387,9 @@ public class SecurityHandler implements RequestHandler,ISecurityHandler {
 				
 			}
 		}		
-		
+
 		setSecurityContext(message , authenticatedUser);
-		
+
 		return null;
 	}
 	
@@ -435,7 +435,9 @@ public class SecurityHandler implements RequestHandler,ISecurityHandler {
 		{
 			message.put(SecurityContext.class,
 					createSecurityContext(authenticatedUser.getName()));
-			message.put(ROLE,getAudience(extractJWT(message)));
+			if(authenticationProtocol.equals(AuthenticationProtocol.JWT)){
+				message.put(ROLE,getAudience(extractJWT(message)));
+			}
 		}
 		else
 		{

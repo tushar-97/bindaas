@@ -45,6 +45,9 @@ public class ExecutionTaskImpl implements IExecutionTasks {
 
 	public String getRole(){
 		MessageContext messageContext = new MessageContextImpl(PhaseInterceptorChain.getCurrentMessage());
+		if (messageContext.get(ROLE) == null) {
+			return "";
+		}
 		return messageContext.get(ROLE).toString();
 	}
 
